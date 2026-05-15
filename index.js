@@ -1,55 +1,77 @@
-let firstNumber = 0;
-let secondNumber = 0;
+let firstNumber = "";
+let secondNumber = "";
+let results = null;
 let operator = "";
+let nextNumber = false;
+
+const buttons = document.querySelectorAll("button");
+const calculatorUI = document.querySelector("ui");
+const firstNumberUI = document.getElementById("firstNumber");
+const secondNumberUI = document.getElementById("secondNumber");
+const operatorUI = document.getElementById("operator");
+const resultUI = document.getElementById("results");
 
 function operate(firstNumber, secondNumber, operator) {
-  // needs reduce???
-  console.log("operate");
+  firstNumber = Number(firstNumber);
+  secondNumber = Number(secondNumber);
+
   switch (operator) {
     case "+":
-      result = firstNumber + secondNumber;
-      return result;
+      return firstNumber + secondNumber;
+
     case "-":
-      result = firstNumber - secondNumber;
-      return result;
+      return firstNumber - secondNumber;
+
     case "*":
-      result = firstNumber * secondNumber;
-      return result;
+      return firstNumber * secondNumber;
+
     case "/":
-      result = firstNumber / secondNumber;
-      return result;
+      return firstNumber / secondNumber;
   }
 }
 
 function clearInputs() {
-  console.log("clear operations");
-  firstNumber = 0;
-  secondNumber = 0;
+  firstNumber = "";
+  secondNumber = "";
   operator = "";
+  nextNumber = false;
+  results = null;
+  resultUI.innerText = null;
+  firstNumberUI.innerText = null;
+  secondNumberUI.innerText = null;
+  operatorUI.innerText = null;
 }
-
-const buttons = document.querySelectorAll("button");
 
 buttons.forEach((button) => {
   button.addEventListener("click", function (e) {
     const value = e.target.innerText;
-    const classList = e.target.id;
+    const id = e.target.id;
 
-    console.log(classList);
+    if (resultUI.innerText) {
+      clearInputs();
+    }
 
     if (value.toLowerCase() === "clear") {
       clearInputs();
-    } else if (classList === "operate") {
+    } else if (id === "operations") {
       operator = value;
-    } else if (value.toLowerCase() === "=") {
-      console.log(operate(firstNumber, secondNumber, operator));
+      nextNumber = true;
+      operatorUI.innerText = operator;
+    } else if (value === "=") {
+      results = operate(firstNumber, secondNumber, operator);
+      results = results.toFixed(2);
+      resultUI.innerText = results;
+      firstNumberUI.innerText = null;
+      secondNumberUI.innerText = null;
+      operatorUI.innerText = null;
     } else {
-      console.log("hello");
+      if (!nextNumber) {
+        firstNumber += value;
+        firstNumberUI.innerText = firstNumber;
+      } else {
+        secondNumber += value;
+        secondNumberUI.innerText = secondNumber;
+      }
     }
-
-    console.log(value);
-    console.log(firstNumber);
-    console.log(secondNumber);
-    console.log(operator);
   });
 });
